@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CPD Maturity Assessment</title>
     <style>
-        /* All original CSS preserved */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #0d114a; min-height: 100vh; }
         .app-container { min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 2rem 1rem; }
@@ -14,57 +13,54 @@
         .title { font-size: 2.5rem; font-weight: bold; color: #0d114a; margin-bottom: 1.5rem; text-align: center; }
         .subtitle { font-size: 1.125rem; color: #374151; margin-bottom: 2rem; text-align: center; line-height: 1.6; }
         .btn { width: 100%; margin-top: 1rem; background-color: #01a575; color: white; font-weight: bold; padding: 1rem 1.5rem; border-radius: 0.5rem; font-size: 1.125rem; border: none; cursor: pointer; }
-        .progress-container { margin-bottom: 2rem; max-width: 56rem; width: 100%; margin: 0 auto 2rem; }
+        
+        /* Progress Bars */
+        .progress-container { margin-bottom: 2rem; width: 100%; }
         .progress-text { display: flex; justify-content: space-between; color: white; font-size: 0.875rem; margin-bottom: 0.5rem; }
-        .progress-bar-bg { width: 100%; background-color: rgba(255,255,255,0.2); border-radius: 9999px; height: 0.75rem; }
-        .progress-bar-fill { background-color: #01a575; height: 0.75rem; border-radius: 9999px; transition: width 0.3s; }
+        .progress-bar-bg { width: 100%; background-color: rgba(255,255,255,0.2); border-radius: 9999px; height: 0.75rem; overflow: hidden; }
+        .progress-bar-fill { background-color: #01a575; height: 100%; transition: width 0.5s ease-out; }
+        
+        /* Category Results Styling */
+        .category-result-row { margin-bottom: 1.5rem; }
+        .category-label-wrapper { display: flex; justify-content: space-between; margin-bottom: 0.4rem; font-weight: 600; color: #0d114a; font-size: 0.95rem; }
+        .result-bar-bg { width: 100%; background-color: #e5e7eb; border-radius: 9999px; height: 0.6rem; }
+        .result-bar-fill { background-color: #01a575; height: 100%; border-radius: 9999px; }
+
         .category-badge { display: inline-block; background-color: #01a575; color: white; font-size: 0.75rem; font-weight: bold; padding: 0.25rem 0.75rem; border-radius: 9999px; margin-bottom: 1rem; }
         .question-text { font-size: 1.5rem; font-weight: bold; color: #0d114a; line-height: 1.3; }
         .answer-btn { width: 100%; padding: 1rem; border-radius: 0.5rem; border: 2px solid #d1d5db; font-weight: 600; transition: all 0.2s; cursor: pointer; background-color: white; margin-bottom: 0.75rem; text-align: left; }
         .answer-btn:hover { border-color: #01a575; background-color: #e6f7f1; }
+        
         .results-box { background-color: #0d114a; color: white; border-radius: 0.5rem; padding: 2rem; margin: 2rem 0; text-align: center; }
         .results-level { font-size: 2.5rem; font-weight: bold; color: #01a575; margin-bottom: 0.5rem; }
-        .category-scores-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; text-align: left; margin-top: 1rem; }
-        .category-score-item { padding: 0.75rem; border-radius: 0.25rem; background-color: #1a1e5c; color: white; }
-        .category-score-item .score { font-weight: bold; color: #01a575; }
         .center { text-align: center; margin-top: 2rem; }
-        .link-btn { display: inline-block; background-color: #01a575; color: white; font-weight: bold; padding: 1rem 2rem; border-radius: 0.5rem; text-decoration: none; }
+        .link-btn { display: inline-block; background-color: #01a575; color: white; font-weight: bold; padding: 1rem 2rem; border-radius: 0.5rem; text-decoration: none; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
     <div id="app"></div>
     <script>
-        // Data Structures
         const cpdQuestions = [
-            // Strategy & Mindset
             { id: 1, category: 'Strategy & Mindset', text: 'How do you decide what to learn each year?', options: [{ score: 1, text: 'Only what is assigned to me' }, { score: 2, text: 'Interesting topics as they pop up' }, { score: 3, text: 'Gaps in current performance' }, { score: 4, text: 'Analyze future trends and career goals' }]},
             { id: 2, category: 'Strategy & Mindset', text: 'When do you typically engage in professional development?', options: [{ score: 1, text: 'Only for mandatory certifications' }, { score: 2, text: 'During slow periods or training weeks' }, { score: 3, text: 'Monthly or quarterly per my plan' }, { score: 4, text: 'Daily or weekly as a standard habit' }]},
             { id: 3, category: 'Strategy & Mindset', text: 'What is your primary motivator for learning?', options: [{ score: 1, text: 'Compliance and job security' }, { score: 2, text: 'Gaining a specific title/certificate' }, { score: 3, text: 'Improving current role efficiency' }, { score: 4, text: 'Personal fulfillment and cutting-edge expertise' }]},
             { id: 4, category: 'Strategy & Mindset', text: 'How do you track your learning progress?', options: [{ score: 1, text: 'I don\'t track it myself' }, { score: 2, text: 'Save certificates in a folder' }, { score: 3, text: 'Maintain a log of hours and courses' }, { score: 4, text: 'Keep a reflective portfolio of outcomes' }]},
             { id: 5, category: 'Strategy & Mindset', text: 'How do you handle "Soft Skills"?', options: [{ score: 1, text: 'I focus only on technical training' }, { score: 2, text: 'Attend workshops if organized for me' }, { score: 3, text: 'Seek out books/podcasts to improve traits' }, { score: 4, text: 'Treat them as equal to technical skills' }]},
-            
-            // Methodology & Variety
             { id: 6, category: 'Methodology & Variety', text: 'Which describes your "learning mix"?', options: [{ score: 1, text: '100% formal/classroom' }, { score: 2, text: 'Mostly formal with some reading' }, { score: 3, text: 'Mix of formal and on-the-job trial' }, { score: 4, text: 'Blend of formal, social, and experiential' }]},
             { id: 7, category: 'Methodology & Variety', text: 'How do you use social media for CPD?', options: [{ score: 1, text: 'I don\'t use it for work' }, { score: 2, text: 'Watch others but rarely interact' }, { score: 3, text: 'Follow leaders to stay updated' }, { score: 4, text: 'Engage in discussions and share insights' }]},
             { id: 8, category: 'Methodology & Variety', text: 'What is your approach to Mentorship?', options: [{ score: 1, text: 'Never seen the need' }, { score: 2, text: 'Would like one but haven\'t sought it' }, { score: 3, text: 'Have a mentor I meet with regularly' }, { score: 4, text: 'Have a mentor and I mentor others' }]},
             { id: 9, category: 'Methodology & Variety', text: 'How do you handle new, difficult problems?', options: [{ score: 1, text: 'Ask someone else or wait for instructions' }, { score: 2, text: 'Search for a quick "how-to" guide' }, { score: 3, text: 'Research underlying principles' }, { score: 4, text: 'Solve it and document/teach the solution' }]},
             { id: 10, category: 'Methodology & Variety', text: 'How do you view workplace failures?', options: [{ score: 1, text: 'Something to be avoided/hidden' }, { score: 2, text: 'Frustrating setback' }, { score: 3, text: 'Chance to stop and reflect' }, { score: 4, text: 'Vital data point to improve process' }]},
-
-            // Implementation & Impact
             { id: 11, category: 'Implementation & Impact', text: 'After a training course, you usually...', options: [{ score: 1, text: 'File the certificate and move on' }, { score: 2, text: 'Try to remember key points' }, { score: 3, text: 'Change one specific daily routine' }, { score: 4, text: 'Create an action plan and review impact' }]},
             { id: 12, category: 'Implementation & Impact', text: 'How much learning is shared with colleagues?', options: [{ score: 1, text: 'None; it is for my own benefit' }, { score: 2, text: 'Mention facts during breaks' }, { score: 3, text: 'Share notes/materials if asked' }, { score: 4, text: 'Lead "lunch and learns" or update SOPs' }]},
             { id: 13, category: 'Implementation & Impact', text: 'How do you measure CPD success?', options: [{ score: 1, text: 'By staying employed/certified' }, { score: 2, text: 'By hours or credits earned' }, { score: 3, text: 'By positive feedback in reviews' }, { score: 4, text: 'By measurable productivity/quality gains' }]},
             { id: 14, category: 'Implementation & Impact', text: 'Your relationship with industry trends?', options: [{ score: 1, text: 'Focus on tasks and ignore "noise"' }, { score: 2, text: 'Hear about them via word-of-mouth' }, { score: 3, text: 'Subscribe to journals/newsletters' }, { score: 4, text: 'Experiment with tools before they are required' }]},
             { id: 15, category: 'Implementation & Impact', text: 'How do you manage your learning budget?', options: [{ score: 1, text: 'Wait for company to pay' }, { score: 2, text: 'Use free resources in spare time' }, { score: 3, text: 'Advocate for a budget in reviews' }, { score: 4, text: 'Strategically invest own time/money' }]},
-
-            // Reflection
             { id: 16, category: 'Reflection', text: 'How do you approach your weaknesses?', options: [{ score: 1, text: 'Work around them or hide them' }, { score: 2, text: 'Acknowledge them during reviews' }, { score: 3, text: 'Prioritize activities to strengthen them' }, { score: 4, text: 'Seek real-time feedback to correct them' }]},
             { id: 17, category: 'Reflection', text: 'How often do you reflect on learning?', options: [{ score: 1, text: 'Once a year for self-assessment' }, { score: 2, text: 'Occasionally if a project goes poorly' }, { score: 3, text: 'Monthly scheduled review' }, { score: 4, text: 'Daily or weekly wrap-up routine' }]},
             { id: 18, category: 'Reflection', text: 'After reading a professional article, you...', options: [{ score: 1, text: 'Finish it and move on' }, { score: 2, text: 'Highlight parts but rarely revisit' }, { score: 3, text: 'Take structured notes/summaries' }, { score: 4, text: 'Create an experiment to test an idea' }]},
             { id: 19, category: 'Reflection', text: 'How do you handle feedback?', options: [{ score: 1, text: 'Feel defensive or ignore it' }, { score: 2, text: 'Listen but rarely change habits' }, { score: 3, text: 'Record it and look for patterns' }, { score: 4, text: 'Solicit honesty to fuel growth' }]},
             { id: 20, category: 'Reflection', text: 'What role does "unlearning" play?', options: [{ score: 1, text: 'I don\'t believe in unlearning' }, { score: 2, text: 'Change only if forced by software/policy' }, { score: 3, text: 'Recognize when skills are obsolete' }, { score: 4, text: 'Regularly audit and prune inefficient habits' }]},
-
-            // Social & Future
             { id: 21, category: 'Social & Future-Proofing', text: 'Why attend networking events?', options: [{ score: 1, text: 'Company expects it' }, { score: 2, text: 'To collect business cards' }, { score: 3, text: 'To discuss specific challenges' }, { score: 4, text: 'To build a "board of directors"' }]},
             { id: 22, category: 'Social & Future-Proofing', text: 'Interaction with professional bodies?', options: [{ score: 1, text: 'Not a member' }, { score: 2, text: 'Pay fee but don\'t read news' }, { score: 3, text: 'Use resources for CPD points' }, { score: 4, text: 'Volunteer or contribute to forums' }]},
             { id: 23, category: 'Social & Future-Proofing', text: 'When a junior asks for help, you...', options: [{ score: 1, text: 'Do it for them' }, { score: 2, text: 'Show them the steps' }, { score: 3, text: 'Explain the "why" behind steps' }, { score: 4, text: 'Use it as a coaching moment' }]},
@@ -78,24 +74,18 @@
         ];
 
         const resultDescriptions = {
-            'Reactive Learner': 'You tend to learn based on immediate necessity or compliance. You are meeting basic requirements, but your skills may be at risk of stagnation. Strategy: Try setting aside 30 minutes a week for "curiosity-based" reading.',
-            'Occasional Learner': 'You are open to growth and engage when opportunities arise, but your development lacks a consistent system. Strategy: Create a 6-month Personal Development Plan to move from reactive to proactive growth.',
-            'Strategic Learner': 'You are highly professional and intentional. You see the clear link between learning and performance. Strategy: Start looking at "cross-industry" skills to broaden your mental models.',
-            'CPD Champion': 'Learning is a core part of your identity. You don’t just improve yourself; you improve the people and systems around you. Strategy: Focus on high-level mentorship and contributing to the wider industry knowledge.'
+            'Reactive Learner': 'You tend to learn based on immediate necessity or compliance. Strategy: Try setting aside 30 minutes a week for "curiosity-based" reading to build a proactive habit.',
+            'Occasional Learner': 'You are open to growth but your development lacks a consistent system. Strategy: Create a 6-month Personal Development Plan to focus your learning on specific goals.',
+            'Strategic Learner': 'You are highly professional and intentional. You see the link between learning and performance. Strategy: Start looking at "cross-industry" skills to broaden your mental models.',
+            'CPD Champion': 'Learning is a core part of your identity. You don’t just improve yourself; you improve others. Strategy: Focus on high-level mentorship and shaping industry-wide knowledge.'
         };
 
-        let state = {
-            stage: 'welcome',
-            currentQuestion: 0,
-            answers: {} 
-        };
+        let state = { stage: 'welcome', currentQuestion: 0, answers: {} };
 
         function calculateCategoryScores(answers) {
-            const categories = ['Strategy & Mindset', 'Methodology & Variety', 'Implementation & Impact', 'Reflection', 'Social & Future-Proofing'];
             const scores = {};
-            categories.forEach(cat => scores[cat] = { score: 0, max: 0 }); 
-
             cpdQuestions.forEach((q, index) => {
+                if (!scores[q.category]) scores[q.category] = { score: 0, max: 0 };
                 scores[q.category].score += (answers[index] || 0);
                 scores[q.category].max += 4;
             });
@@ -107,16 +97,12 @@
 
             if (state.stage === 'welcome') {
                 app.innerHTML = `
-                    <div class="app-container">
-                        <div class="main-content-wrapper">
-                            <div class="card">
-                                <h1 class="title">CPD Maturity Assessment</h1>
-                                <p class="subtitle">This 30-question tool evaluates your habits, mindset, and approach toward Continual Professional Development (CPD). Discover your maturity level and how to reach the next stage of growth.</p>
-                                <button id="begin-btn" class="btn">Begin Assessment →</button>
-                            </div>
-                        </div>
-                    </div>`;
-                document.getElementById('begin-btn').addEventListener('click', () => { state.stage = 'assessment'; render(); });
+                    <div class="app-container"><div class="main-content-wrapper"><div class="card">
+                        <h1 class="title">CPD Maturity Assessment</h1>
+                        <p class="subtitle">This 30-question tool evaluates your habits and mindset toward Continual Professional Development. Discover your maturity level and learn how to reach the next stage.</p>
+                        <button id="begin-btn" class="btn">Begin Assessment →</button>
+                    </div></div></div>`;
+                document.getElementById('begin-btn').onclick = () => { state.stage = 'assessment'; render(); };
 
             } else if (state.stage === 'assessment') {
                 const currentQ = cpdQuestions[state.currentQuestion];
@@ -137,40 +123,49 @@
                         </div>
                     </div></div>`;
                 document.querySelectorAll('.answer-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
+                    btn.onclick = () => {
                         state.answers[state.currentQuestion] = parseInt(btn.getAttribute('data-score'));
                         if (state.currentQuestion < cpdQuestions.length - 1) { state.currentQuestion++; render(); }
                         else { state.stage = 'results'; render(); }
-                    });
+                    };
                 });
-                document.getElementById('prev-btn').addEventListener('click', () => { state.currentQuestion--; render(); });
+                document.getElementById('prev-btn').onclick = () => { state.currentQuestion--; render(); };
 
             } else if (state.stage === 'results') {
                 const totalScore = Object.values(state.answers).reduce((a, b) => a + b, 0);
-                let level = '';
-                if (totalScore <= 50) level = 'Reactive Learner';
-                else if (totalScore <= 80) level = 'Occasional Learner';
-                else if (totalScore <= 105) level = 'Strategic Learner';
-                else level = 'CPD Champion';
-
+                let level = totalScore <= 50 ? 'Reactive Learner' : totalScore <= 80 ? 'Occasional Learner' : totalScore <= 105 ? 'Strategic Learner' : 'CPD Champion';
                 const catScores = calculateCategoryScores(state.answers);
 
                 app.innerHTML = `
-                    <div class="app-container"><div class="card">
+                    <div class="app-container"><div class="main-content-wrapper"><div class="card">
                         <h1 class="title">Your Results</h1>
                         <div class="results-box">
                             <div class="results-level">${level}</div>
                             <div style="font-size: 1.25rem;">Total Maturity Score: ${totalScore} / 120</div>
                         </div>
-                        <h2 style="color: #0d114a; margin-bottom: 1rem;">Category Breakdown</h2>
-                        <div class="category-scores-grid">
-                            ${Object.entries(catScores).map(([name, d]) => `<div class="category-score-item">${name}: <span class="score">${d.score}/${d.max}</span></div>`).join('')}
+                        
+                        <h2 style="color: #0d114a; margin-bottom: 1.5rem;">Maturity by Category</h2>
+                        <div style="margin-bottom: 2rem;">
+                            ${Object.entries(catScores).map(([name, d]) => {
+                                const percentage = (d.score / d.max) * 100;
+                                return `
+                                <div class="category-result-row">
+                                    <div class="category-label-wrapper">
+                                        <span>${name}</span>
+                                        <span>${Math.round(percentage)}%</span>
+                                    </div>
+                                    <div class="result-bar-bg">
+                                        <div class="result-bar-fill" style="width: ${percentage}%"></div>
+                                    </div>
+                                </div>`;
+                            }).join('')}
                         </div>
-                        <div style="margin: 2rem 0; line-height: 1.6; padding: 1.5rem; background: #f3f4f6; border-left: 5px solid #01a575; border-radius: 4px;">
-                            ${resultDescriptions[level]}
+
+                        <div style="line-height: 1.6; padding: 1.5rem; background: #f3f4f6; border-left: 5px solid #01a575; border-radius: 4px; margin-bottom: 2rem;">
+                            <strong>Summary:</strong> ${resultDescriptions[level]}
                         </div>
-                        <div class="center"><button class="link-btn" style="border:none; cursor:pointer;" onclick="location.reload()">Restart Assessment</button></div>
-                    </div></div>`;
+                        <div class="center"><button class="link-btn" onclick="location.reload()">Restart Assessment</button></div>
+                    </div></div></div>`;
             }
         }
         render();
