@@ -6,40 +6,46 @@
     <title>CPD Maturity Assessment</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #0d114a; min-height: 100vh; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #003366; min-height: 100vh; }
         .app-container { min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 2rem 1rem; }
         .main-content-wrapper { max-width: 56rem; width: 100%; }
-        .card { width: 100%; background-color: white; border-radius: 0.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); padding: 3rem; }
-        .title { font-size: 2.5rem; font-weight: bold; color: #0d114a; margin-bottom: 1.5rem; text-align: center; }
-        .subtitle { font-size: 1.125rem; color: #374151; margin-bottom: 2rem; text-align: center; line-height: 1.6; }
-        .btn { width: 100%; margin-top: 1rem; background-color: #01a575; color: white; font-weight: bold; padding: 1rem 1.5rem; border-radius: 0.5rem; font-size: 1.125rem; border: none; cursor: pointer; }
+        .card { width: 100%; background-color: #ffffff; border-radius: 0.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); padding: 3rem; }
+        .title { font-size: 2.5rem; font-weight: bold; color: #003366; margin-bottom: 1.5rem; text-align: center; }
+        .subtitle { font-size: 1.125rem; color: #666666; margin-bottom: 2rem; text-align: center; line-height: 1.6; }
         
         /* Progress Bars */
         .progress-container { margin-bottom: 2rem; width: 100%; }
-        .progress-text { display: flex; justify-content: space-between; color: white; font-size: 0.875rem; margin-bottom: 0.5rem; }
+        .progress-text { display: flex; justify-content: space-between; color: #ffffff; font-size: 0.875rem; margin-bottom: 0.5rem; }
         .progress-bar-bg { width: 100%; background-color: rgba(255,255,255,0.2); border-radius: 9999px; height: 0.75rem; overflow: hidden; }
-        .progress-bar-fill { background-color: #01a575; height: 100%; transition: width 0.5s ease-out; }
+        .progress-bar-fill { background-color: #fcba63; height: 100%; transition: width 0.5s ease-out; }
         
         /* Category Results Styling */
         .category-result-row { margin-bottom: 1.5rem; }
-        .category-label-wrapper { display: flex; justify-content: space-between; margin-bottom: 0.4rem; font-weight: 600; color: #0d114a; font-size: 0.95rem; }
-        .result-bar-bg { width: 100%; background-color: #e5e7eb; border-radius: 9999px; height: 0.6rem; }
-        .result-bar-fill { background-color: #01a575; height: 100%; border-radius: 9999px; }
+        .category-label-wrapper { display: flex; justify-content: space-between; margin-bottom: 0.4rem; font-weight: 600; color: #003366; font-size: 0.95rem; }
+        .result-bar-bg { width: 100%; background-color: #eeeeee; border-radius: 9999px; height: 0.6rem; }
+        .result-bar-fill { background-color: #fcba63; height: 100%; border-radius: 9999px; }
 
-        .category-badge { display: inline-block; background-color: #01a575; color: white; font-size: 0.75rem; font-weight: bold; padding: 0.25rem 0.75rem; border-radius: 9999px; margin-bottom: 1rem; }
-        .question-text { font-size: 1.5rem; font-weight: bold; color: #0d114a; line-height: 1.3; }
-        .answer-btn { width: 100%; padding: 1rem; border-radius: 0.5rem; border: 2px solid #d1d5db; font-weight: 600; transition: all 0.2s; cursor: pointer; background-color: white; margin-bottom: 0.75rem; text-align: left; }
-        .answer-btn:hover { border-color: #01a575; background-color: #e6f7f1; }
+        .category-badge { display: inline-block; background-color: #666666; color: #ffffff; font-size: 0.75rem; font-weight: bold; padding: 0.25rem 0.75rem; border-radius: 9999px; margin-bottom: 1rem; }
+        .question-text { font-size: 1.5rem; font-weight: bold; color: #003366; line-height: 1.3; }
         
-        .results-box { background-color: #0d114a; color: white; border-radius: 0.5rem; padding: 2rem; margin: 2rem 0; text-align: center; }
-        .results-level { font-size: 2.5rem; font-weight: bold; color: #01a575; margin-bottom: 0.5rem; }
+        /* Buttons */
+        .btn { width: 100%; margin-top: 1rem; background-color: #fcba63; color: #003366; font-weight: bold; padding: 1rem 1.5rem; border-radius: 0.5rem; font-size: 1.125rem; border: none; cursor: pointer; transition: background 0.2s; }
+        .btn:hover { background-color: #e5a95a; }
+        
+        .answer-btn { width: 100%; padding: 1rem; border-radius: 0.5rem; border: 2px solid #666666; font-weight: 600; transition: all 0.2s; cursor: pointer; background-color: #ffffff; margin-bottom: 0.75rem; text-align: left; color: #003366; }
+        .answer-btn:hover { border-color: #fcba63; background-color: #fff9f2; }
+        
+        .results-box { background-color: #003366; color: #ffffff; border-radius: 0.5rem; padding: 2rem; margin: 2rem 0; text-align: center; border: 2px solid #fcba63; }
+        .results-level { font-size: 2.5rem; font-weight: bold; color: #fcba63; margin-bottom: 0.5rem; }
+        
         .center { text-align: center; margin-top: 2rem; }
-        .link-btn { display: inline-block; background-color: #01a575; color: white; font-weight: bold; padding: 1rem 2rem; border-radius: 0.5rem; text-decoration: none; border: none; cursor: pointer; }
+        .link-btn { display: inline-block; background-color: #fcba63; color: #003366; font-weight: bold; padding: 1rem 2rem; border-radius: 0.5rem; text-decoration: none; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
     <div id="app"></div>
     <script>
+        // Data Structure with Categories
         const cpdQuestions = [
             { id: 1, category: 'Strategy & Mindset', text: 'How do you decide what to learn each year?', options: [{ score: 1, text: 'Only what is assigned to me' }, { score: 2, text: 'Interesting topics as they pop up' }, { score: 3, text: 'Gaps in current performance' }, { score: 4, text: 'Analyze future trends and career goals' }]},
             { id: 2, category: 'Strategy & Mindset', text: 'When do you typically engage in professional development?', options: [{ score: 1, text: 'Only for mandatory certifications' }, { score: 2, text: 'During slow periods or training weeks' }, { score: 3, text: 'Monthly or quarterly per my plan' }, { score: 4, text: 'Daily or weekly as a standard habit' }]},
@@ -99,7 +105,7 @@
                 app.innerHTML = `
                     <div class="app-container"><div class="main-content-wrapper"><div class="card">
                         <h1 class="title">CPD Maturity Assessment</h1>
-                        <p class="subtitle">This 30-question tool evaluates your habits and mindset toward Continual Professional Development. Discover your maturity level and learn how to reach the next stage.</p>
+                        <p class="subtitle">Evaluate your habits and mindset toward Continual Professional Development. Discover your maturity level and learn how to reach the next stage of your career.</p>
                         <button id="begin-btn" class="btn">Begin Assessment →</button>
                     </div></div></div>`;
                 document.getElementById('begin-btn').onclick = () => { state.stage = 'assessment'; render(); };
@@ -119,7 +125,7 @@
                             <div style="margin: 2rem 0;">
                                 ${currentQ.options.map(opt => `<button class="answer-btn" data-score="${opt.score}">${opt.text}</button>`).join('')}
                             </div>
-                            <button id="prev-btn" class="btn" style="background:#6b7280; width: auto; padding: 0.5rem 2rem;" ${state.currentQuestion === 0 ? 'disabled' : ''}>Back</button>
+                            <button id="prev-btn" class="btn" style="background:#666666; color:#ffffff; width: auto; padding: 0.5rem 2rem;" ${state.currentQuestion === 0 ? 'disabled' : ''}>Back</button>
                         </div>
                     </div></div>`;
                 document.querySelectorAll('.answer-btn').forEach(btn => {
@@ -144,7 +150,7 @@
                             <div style="font-size: 1.25rem;">Total Maturity Score: ${totalScore} / 120</div>
                         </div>
                         
-                        <h2 style="color: #0d114a; margin-bottom: 1.5rem;">Maturity by Category</h2>
+                        <h2 style="color: #003366; margin-bottom: 1.5rem;">Maturity by Category</h2>
                         <div style="margin-bottom: 2rem;">
                             ${Object.entries(catScores).map(([name, d]) => {
                                 const percentage = (d.score / d.max) * 100;
@@ -161,7 +167,7 @@
                             }).join('')}
                         </div>
 
-                        <div style="line-height: 1.6; padding: 1.5rem; background: #f3f4f6; border-left: 5px solid #01a575; border-radius: 4px; margin-bottom: 2rem;">
+                        <div style="line-height: 1.6; padding: 1.5rem; background: #fff9f2; border-left: 5px solid #fcba63; border-radius: 4px; margin-bottom: 2rem; color: #003366;">
                             <strong>Summary:</strong> ${resultDescriptions[level]}
                         </div>
                         <div class="center"><button class="link-btn" onclick="location.reload()">Restart Assessment</button></div>
