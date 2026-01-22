@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPD Maturity Assessment</title>
+    <style>
+        /* All your original CSS remains exactly the same */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #0d114a; min-height: 100vh; }
+        .app-container { min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 2rem 1rem; }
+        .main-content-wrapper { max-width: 56rem; width: 100%; }
+        .card { width: 100%; background-color: white; border-radius: 0.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); padding: 3rem; }
+        .logo-container { text-align: center; margin-top: 2rem; margin-bottom: 1.5rem; }
+        .logo { max-width: 180px; height: auto; display: inline-block; }
+        .title { font-size: 2.5rem; font-weight: bold; color: #0d114a; margin-bottom: 1.5rem; text-align: center; }
+        .subtitle { font-size: 1.125rem; color: #374151; margin-bottom: 2rem; text-align: center; line-height: 1.6; }
+        .form-group { margin-bottom: 1.5rem; }
+        .label { display: block; font-size: 0.875rem; font-weight: 600; color: #0d114a; margin-bottom: 0.5rem; }
+        .input { width: 100%; padding: 0.75rem 1rem; border: 2px solid #d1d5db; border-radius: 0.5rem; font-size: 1.125rem; }
+        .checkbox-container { display: flex; align-items: flex-start; gap: 10px; margin: 1.5rem 0; padding: 1rem; background-color: #f9fafb; border-radius: 0.5rem; border: 1px solid #e5e7eb; }
+        .btn { width: 100%; margin-top: 1rem; background-color: #01a575; color: white; font-weight: bold; padding: 1rem 1.5rem; border-radius: 0.5rem; font-size: 1.125rem; border: none; cursor: pointer; }
+        .progress-container { margin-bottom: 2rem; max-width: 56rem; width: 100%; margin: 0 auto 2rem; }
+        .progress-text { display: flex; justify-content: space-between; color: white; font-size: 0.875rem; margin-bottom: 0.5rem; }
+        .progress-bar-bg { width: 100%; background-color: rgba(255,255,255,0.2); border-radius: 9999px; height: 0.75rem; }
+        .progress-bar-fill { background-color: #01a575; height: 0.75rem; border-radius: 9999px; transition: width 0.3s; }
+        .category-badge { display: inline-block; background-color: #01a575; color: white; font-size: 0.75rem; font-weight: bold; padding: 0.25rem 0.75rem; border-radius: 9999px; margin-bottom: 1rem; }
+        .question-text { font-size: 1.5rem; font-weight: bold; color: #0d114a; line-height: 1.3; }
+        .answer-btn { width: 100%; padding: 1rem; border-radius: 0.5rem; border: 2px solid #d1d5db; font-weight: 600; transition: all 0.2s; cursor: pointer; background-color: white; margin-bottom: 0.75rem; text-align: left; }
+        .answer-btn:hover { border-color: #01a575; background-color: #e6f7f1; }
+        .answer-btn.selected { background-color: #01a575; color: white; border-color: #01a575; }
+        .results-box { background-color: #0d114a; color: white; border-radius: 0.5rem; padding: 2rem; margin: 2rem 0; text-align: center; }
+        .results-level { font-size: 2.5rem; font-weight: bold; color: #01a575; margin-bottom: 0.5rem; }
+        .category-scores-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; text-align: left; margin-top: 1rem; }
+        .category-score-item { padding: 0.75rem; border-radius: 0.25rem; background-color: #1a1e5c; color: white; }
+        .category-score-item .score { font-weight: bold; color: #01a575; }
+        .center { text-align: center; margin-top: 2rem; }
+        .link-btn { display: inline-block; background-color: #01a575; color: white; font-weight: bold; padding: 1rem 2rem; border-radius: 0.5rem; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+    <script>
+        const WEB_APP_URL = 'PASTE_YOUR_GOOGLE_SCRIPT_URL_HERE';
+
+        const cpdQuestions = [
+            // Section 1: Strategy & Mindset
+            { id: 1, category: 'Strategy & Mindset', text: 'How do you decide what to learn each year?', options: [{ score: 1, text: 'Only what is assigned to me' }, { score: 2, text: 'Interesting topics as they pop up' }, { score: 3, text: 'Gaps in current performance' }, { score: 4, text: 'Analyze future trends and career goals' }]},
+            { id: 2, category: 'Strategy & Mindset', text: 'When do you typically engage in professional development?', options: [{ score: 1, text: 'Only for mandatory certifications' }, { score: 2, text: 'During slow periods or training weeks' }, { score: 3, text: 'Monthly or quarterly per my plan' }, { score: 4, text: 'Daily or weekly as a standard habit' }]},
+            { id: 3, category: 'Strategy & Mindset', text: 'What is your primary motivator for learning?', options: [{ score: 1, text: 'Compliance and job security' }, { score: 2, text: 'Gaining a specific title/certificate' }, { score: 3, text: 'Improving current role efficiency' }, { score: 4, text: 'Personal fulfillment and cutting-edge expertise' }]},
+            { id: 4, category: 'Strategy & Mindset', text: 'How do you track your learning progress?', options: [{ score: 1, text: 'I don\'t track it myself' }, { score: 2, text: 'Save certificates in a folder' }, { score: 3, text: 'Maintain a log of hours and courses' }, { score: 4, text: 'Keep a reflective portfolio of outcomes' }]},
+            { id: 5, category: 'Strategy & Mindset', text: 'How do you handle "Soft Skills"?', options: [{ score: 1, text: 'I focus only on technical training' }, { score: 2, text: 'Attend workshops if organized for me' }, { score: 3, text: 'Seek out books/podcasts to improve traits' }, { score: 4, text: 'Treat them as equal to technical skills' }]},
+            
+            // Section 2: Methodology & Variety
+            { id: 6, category: 'Methodology & Variety', text: 'Which describes your "learning mix"?', options: [{ score: 1, text: '100% formal/classroom' }, { score: 2, text: 'Mostly formal with some reading' }, { score: 3, text: 'Mix of formal and on-the-job trial' }, { score: 4, text: 'Blend of formal, social, and experiential' }]},
+            { id: 7, category: 'Methodology & Variety', text: 'How do you use social media for CPD?', options: [{ score: 1, text: 'I don\'t use it for work' }, { score: 2, text: 'Watch others but rarely interact' }, { score: 3, text: 'Follow leaders to stay updated' }, { score: 4, text: 'Engage in discussions and share insights' }]},
+            { id: 8, category: 'Methodology & Variety', text: 'What is your approach to Mentorship?', options: [{ score: 1, text: 'Never seen the need' }, { score: 2, text: 'Would like one but haven\'t sought it' }, { score: 3, text: 'Have a mentor I meet with regularly' }, { score: 4, text: 'Have a mentor and I mentor others' }]},
+            { id: 9, category: 'Methodology & Variety', text: 'How do you handle new, difficult problems?', options: [{ score: 1, text: 'Ask someone else or wait for instructions' }, { score: 2, text: 'Search for a quick "how-to" guide' }, { score: 3, text: 'Research underlying principles' }, { score: 4, text: 'Solve it and document/teach the solution' }]},
+            { id: 10, category: 'Methodology & Variety', text: 'How do you view workplace failures?', options: [{ score: 1, text: 'Something to be avoided/hidden' }, { score: 2, text: 'Frustrating setback' }, { score: 3, text: 'Chance to stop and reflect' }, { score: 4, text: 'Vital data point to improve process' }]},
+
+            // Section 3: Implementation & Impact
+            { id: 11, category: 'Implementation & Impact', text: 'After a training course, you usually...', options: [{ score: 1, text: 'File the certificate and move on' }, { score: 2, text: 'Try to remember key points' }, { score: 3, text: 'Change one specific daily routine' }, { score: 4, text: 'Create an action plan and review impact' }]},
+            { id: 12, category: 'Implementation & Impact', text: 'How much learning is shared with colleagues?', options: [{ score: 1, text: 'None; it is for my own benefit' }, { score: 2, text: 'Mention facts during breaks' }, { score: 3, text: 'Share notes/materials if asked' }, { score: 4, text: 'Lead "lunch and learns" or update SOPs' }]},
+            { id: 13, category: 'Implementation & Impact', text: 'How do you measure CPD success?', options: [{ score: 1, text: 'By staying employed/certified' }, { score: 2, text: 'By hours or credits earned' }, { score: 3, text: 'By positive feedback in reviews' }, { score: 4, text: 'By measurable productivity/quality gains' }]},
+            { id: 14, category: 'Implementation & Impact', text: 'Your relationship with industry trends?', options: [{ score: 1, text: 'Focus on tasks and ignore "noise"' }, { score: 2, text: 'Hear about them via word-of-mouth' }, { score: 3, text: 'Subscribe to journals/newsletters' }, { score: 4, text: 'Experiment with tools before they are required' }]},
+            { id: 15, category: 'Implementation & Impact', text: 'How do you manage your learning budget?', options: [{ score: 1, text: 'Wait for company to pay' }, { score: 2, text: 'Use free resources in spare time' }, { score: 3, text: 'Advocate for a budget in reviews' }, { score: 4, text: 'Strategically invest own time/money' }]},
+
+            // Section 4: Reflection
+            { id: 16, category: 'Reflection', text: 'How do you approach your weaknesses?', options: [{ score: 1, text: 'Work around them or hide them' }, { score: 2, text: 'Acknowledge them during reviews' }, { score: 3, text: 'Prioritize activities to strengthen them' }, { score: 4, text: 'Seek real-time feedback to correct them' }]},
+            { id: 17, category: 'Reflection', text: 'How often do you reflect on learning?', options: [{ score: 1, text: 'Once a year for self-assessment' }, { score: 2, text: 'Occasionally if a project goes poorly' }, { score: 3, text: 'Monthly scheduled review' }, { score: 4, text: 'Daily or weekly wrap-up routine' }]},
+            { id: 18, category: 'Reflection', text: 'After reading a professional article, you...', options: [{ score: 1, text: 'Finish it and move on' }, { score: 2, text: 'Highlight parts but rarely revisit' }, { score: 3, text: 'Take structured notes/summaries' }, { score: 4, text: 'Create an experiment to test an idea' }]},
+            { id: 19, category: 'Reflection', text: 'How do you handle feedback?', options: [{ score: 1, text: 'Feel defensive or ignore it' }, { score: 2, text: 'Listen but rarely change habits' }, { score: 3, text: 'Record it and look for patterns' }, { score: 4, text: 'Solicit honesty to fuel growth' }]},
+            { id: 20, category: 'Reflection', text: 'What role does "unlearning" play?', options: [{ score: 1, text: 'I don\'t believe in unlearning' }, { score: 2, text: 'Change only if forced by software/policy' }, { score: 3, text: 'Recognize when skills are obsolete' }, { score: 4, text: 'Regularly audit and prune inefficient habits' }]},
+
+            // Section 5: Social & Future
+            { id: 21, category: 'Social & Future-Proofing', text: 'Why attend networking events?', options: [{ score: 1, text: 'Company expects it' }, { score: 2, text: 'To collect business cards' }, { score: 3, text: 'To discuss specific challenges' }, { score: 4, text: 'To build a "board of directors"' }]},
+            { id: 22, category: 'Social & Future-Proofing', text: 'Interaction with professional bodies?', options: [{ score: 1, text: 'Not a member' }, { score: 2, text: 'Pay fee but don\'t read news' }, { score: 3, text: 'Use resources for CPD points' }, { score: 4, text: 'Volunteer or contribute to forums' }]},
+            { id: 23, category: 'Social & Future-Proofing', text: 'When a junior asks for help, you...', options: [{ score: 1, text: 'Do it for them' }, { score: 2, text: 'Show them the steps' }, { score: 3, text: 'Explain the "why" behind steps' }, { score: 4, text: 'Use it as a coaching moment' }]},
+            { id: 24, category: 'Social & Future-Proofing', text: 'How do you stay informed on innovation?', options: [{ score: 1, text: 'Focus entirely on my own desk' }, { score: 2, text: 'Notice when it hits general news' }, { score: 3, text: 'Watch direct competitors' }, { score: 4, text: 'Look at cross-industry inspiration' }]},
+            { id: 25, category: 'Social & Future-Proofing', text: 'Saying "I don\'t know, but I\'ll find out":', options: [{ score: 1, text: 'Rarely; I should have the answer' }, { score: 2, text: 'Occasionally if truly stuck' }, { score: 3, text: 'Frequently; a starting point' }, { score: 4, text: 'Always; I am a "learn-it-all"' }]},
+            { id: 26, category: 'Social & Future-Proofing', text: 'Response to tech shifts (like AI)?', options: [{ score: 1, text: 'Worry it will replace me' }, { score: 2, text: 'Wait for company training' }, { score: 3, text: 'Experiment to save time' }, { score: 4, text: 'Lead transition in my team' }]},
+            { id: 27, category: 'Social & Future-Proofing', text: 'What is your "Learning Horizon"?', options: [{ score: 1, text: 'Next week (immediate tasks)' }, { score: 2, text: '3-6 months (current project)' }, { score: 3, text: '1-2 years (current role path)' }, { score: 4, text: '5+ years (future-proofing)' }]},
+            { id: 28, category: 'Social & Future-Proofing', text: 'Approach to cognitive diversity?', options: [{ score: 1, text: 'Only study my specific job title' }, { score: 2, text: 'Occasionally read outside field' }, { score: 3, text: 'Seek topics that contradict my view' }, { score: 4, text: 'Build mental models from many fields' }]},
+            { id: 29, category: 'Social & Future-Proofing', text: 'Ethics in development?', options: [{ score: 1, text: 'Follow rules to avoid trouble' }, { score: 2, text: 'Attend mandatory annual training' }, { score: 3, text: 'Reflect on ethical tech impact' }, { score: 4, text: 'Advocate for standards and integrity' }]},
+            { id: 30, category: 'Social & Future-Proofing', text: 'View of your career path?', options: [{ score: 1, text: 'Ladder provided by employer' }, { score: 2, text: 'Steps as opportunities arise' }, { score: 3, text: 'Planned journey on my interests' }, { score: 4, text: 'CEO of my own development' }]}
+        ];
+
+        const resultDescriptions = {
+            'Reactive Learner': 'You tend to learn based on immediate necessity or compliance. You are meeting basic requirements, but your skills may be at risk of stagnation as your industry evolves. Strategy: Try setting aside 30 minutes a week for "curiosity-based" reading.',
+            'Occasional Learner': 'You are open to growth and engage when opportunities arise, but your development lacks a consistent system. Strategy: Create a 6-month Personal Development Plan to move from reactive to proactive growth.',
+            'Strategic Learner': 'You are highly professional and intentional. You see the clear link between learning and performance and likely have a solid reputation for expertise. Strategy: Start looking at "cross-industry" skills to broaden your mental models.',
+            'CPD Champion': 'Learning is a core part of your identity. You don’t just improve yourself; you improve the people and systems around you. Strategy: Focus on high-level mentorship and contributing to the wider industry body of knowledge.'
+        };
+
+        let state = {
+            stage: 'welcome',
+            name: '',
+            location: '',
+            consent: false,
+            currentQuestion: 0,
+            answers: {} 
+        };
+
+        function calculateCategoryScores(answers) {
+            const categories = ['Strategy & Mindset', 'Methodology & Variety', 'Implementation & Impact', 'Reflection', 'Social & Future-Proofing'];
+            const scores = {};
+            categories.forEach(cat => scores[cat] = { score: 0, max: 0 }); 
+
+            cpdQuestions.forEach((q, index) => {
+                scores[q.category].score += (answers[index] || 0);
+                scores[q.category].max += 4;
+            });
+            return scores;
+        }
+
+        async function exportToGoogleSheet(data) {
+            if (WEB_APP_URL === 'PASTE_YOUR_GOOGLE_SCRIPT_URL_HERE') return;
+            try {
+                await fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', cache: 'no-cache', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)});
+            } catch (error) { console.error("Error:", error); }
+        }
+
+        function render() {
+            const app = document.getElementById('app');
+
+            if (state.stage === 'welcome') {
+                app.innerHTML = `
+                    <div class="app-container">
+                        <div class="main-content-wrapper">
+                            <div class="card">
+                                <h1 class="title">CPD Maturity Assessment</h1>
+                                <p class="subtitle">Evaluate your habits and mindset toward Continual Professional Development.</p>
+                                <div class="form-group"><label class="label">Full Name *</label><input type="text" id="name-input" class="input" placeholder="Your Name" value="${state.name}"></div>
+                                <div class="form-group"><label class="label">Organization/Role *</label><input type="text" id="location-input" class="input" placeholder="Your Role" value="${state.location}"></div>
+                                <div class="checkbox-container"><input type="checkbox" id="consent-check" ${state.consent ? 'checked' : ''}><label class="checkbox-label">I consent to the collection of my responses for the purpose of this assessment.</label></div>
+                                <button id="begin-btn" class="btn" ${!(state.name && state.location && state.consent) ? 'disabled' : ''}>Start Assessment →</button>
+                            </div>
+                        </div>
+                    </div>`;
+                document.getElementById('name-input').addEventListener('input', (e) => { state.name = e.target.value; render(); });
+                document.getElementById('location-input').addEventListener('input', (e) => { state.location = e.target.value; render(); });
+                document.getElementById('consent-check').addEventListener('change', (e) => { state.consent = e.target.checked; render(); });
+                document.getElementById('begin-btn').addEventListener('click', () => { state.stage = 'assessment'; render(); });
+
+            } else if (state.stage === 'assessment') {
+                const currentQ = cpdQuestions[state.currentQuestion];
+                const progress = ((state.currentQuestion + 1) / cpdQuestions.length) * 100;
+                app.innerHTML = `
+                    <div class="app-container"><div style="max-width: 56rem; width: 100%;">
+                        <div class="progress-container">
+                            <div class="progress-text"><span>Question ${state.currentQuestion+1}/30</span><span>${Math.round(progress)}%</span></div>
+                            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${progress}%"></div></div>
+                        </div>
+                        <div class="card">
+                            <span class="category-badge">${currentQ.category}</span>
+                            <h2 class="question-text">${currentQ.text}</h2>
+                            <div style="margin: 2rem 0;">
+                                ${currentQ.options.map(opt => `<button class="answer-btn" data-score="${opt.score}">${opt.text}</button>`).join('')}
+                            </div>
+                            <button id="prev-btn" class="btn" style="background:#6b7280" ${state.currentQuestion === 0 ? 'disabled' : ''}>Back</button>
+                        </div>
+                    </div></div>`;
+                document.querySelectorAll('.answer-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        state.answers[state.currentQuestion] = parseInt(btn.getAttribute('data-score'));
+                        if (state.currentQuestion < cpdQuestions.length - 1) { state.currentQuestion++; render(); }
+                        else { state.stage = 'results'; render(); }
+                    });
+                });
+                document.getElementById('prev-btn').addEventListener('click', () => { state.currentQuestion--; render(); });
+
+            } else if (state.stage === 'results') {
+                const totalScore = Object.values(state.answers).reduce((a, b) => a + b, 0);
+                let level = '';
+                if (totalScore <= 50) level = 'Reactive Learner';
+                else if (totalScore <= 80) level = 'Occasional Learner';
+                else if (totalScore <= 105) level = 'Strategic Learner';
+                else level = 'CPD Champion';
+
+                const catScores = calculateCategoryScores(state.answers);
+                exportToGoogleSheet({ name: state.name, score: totalScore, level: level });
+
+                app.innerHTML = `
+                    <div class="app-container"><div class="card">
+                        <h1 class="title">Assessment Results</h1>
+                        <div class="results-box"><div class="results-level">${level}</div><div>Score: ${totalScore} / 120</div></div>
+                        <div class="category-scores-grid">
+                            ${Object.entries(catScores).map(([name, d]) => `<div class="category-score-item">${name}: <span class="score">${d.score}/${d.max}</span></div>`).join('')}
+                        </div>
+                        <p style="margin: 2rem 0; line-height: 1.6;">${resultDescriptions[level]}</p>
+                        <div class="center"><a href="#" class="link-btn" onclick="location.reload()">Retake Assessment</a></div>
+                    </div></div>`;
+            }
+        }
+        render();
+    </script>
+</body>
+</html>
